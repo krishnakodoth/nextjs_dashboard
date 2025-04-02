@@ -8,6 +8,7 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+import { revenue,invoices } from './placeholder-data';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -19,9 +20,11 @@ export async function fetchRevenue() {
     // console.log('Fetching revenue data...');
     // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const data = await sql<Revenue[]>`SELECT * FROM revenue`;
+    // -------- 
+    // const data = await sql<Revenue[]>`SELECT * FROM revenue`;
 
     // console.log('Data fetch completed after 3 seconds.');
+    const data = revenue;
 
     return data;
   } catch (error) {
@@ -32,17 +35,47 @@ export async function fetchRevenue() {
 
 export async function fetchLatestInvoices() {
   try {
-    const data = await sql<LatestInvoiceRaw[]>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
-      LIMIT 5`;
+    //-------------- DB connection -----------------
+    // const data = await sql<LatestInvoiceRaw[]>`
+    //   SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+    //   FROM invoices
+    //   JOIN customers ON invoices.customer_id = customers.id
+    //   ORDER BY invoices.date DESC
+    //   LIMIT 5`;
 
-    const latestInvoices = data.map((invoice) => ({
-      ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
+    // const latestInvoices = data.map((invoice) => ({
+    //   ...invoice,
+    //   amount: formatCurrency(invoice.amount),
+    // }));
+    const latestInvoices = [{
+      id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
+      name: 'Evil Rabbit',
+      email: 'evil@rabbit.com',
+      image_url: '/customers/evil-rabbit.png',
+      amount: formatCurrency(15795),
+    },
+    {
+      id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
+      name: 'Delba de Oliveira',
+      email: 'delba@oliveira.com',
+      image_url: '/customers/delba-de-oliveira.png',
+      amount: formatCurrency(1575),
+    },
+    {
+      id: '3958dc9e-742f-4377-85e9-fec4b6a6442a',
+      name: 'Lee Robinson',
+      email: 'lee@robinson.com',
+      image_url: '/customers/lee-robinson.png',
+      amount: formatCurrency(568999),
+    },
+    {
+      id: '76d65c26-f784-44a2-ac19-586678f7c2f2',
+      name: 'Michael Novotny',
+      email: 'michael@novotny.com',
+      image_url: '/customers/michael-novotny.png',
+      amount: formatCurrency(12345),
+    }];
+    
     return latestInvoices;
   } catch (error) {
     console.error('Database Error:', error);
