@@ -13,6 +13,7 @@ import Revenue from '../models/Revenue';
 import dbConnect from './mongoose';
 import Invoice from '../models/Invoice';
 import Customer from '../models/Customer';
+import mongoose from 'mongoose';
 
 
 export async function fetchRevenue() {
@@ -245,7 +246,8 @@ export async function fetchFilteredInvoices(
       }
     ]);
 
-    return invoices;
+    return JSON.parse(JSON.stringify(invoices));
+    //return invoices;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch invoices.');
@@ -313,13 +315,13 @@ export async function fetchInvoicesPages(query: string) {
 export async function fetchInvoiceById(id: string) {
   try {
     // const data = await sql<InvoiceForm[]>`
-    //   SELECT
-    //     invoices.id,
-    //     invoices.customer_id,
-    //     invoices.amount,
-    //     invoices.status
-    //   FROM invoices
-    //   WHERE invoices.id = ${id};
+      // SELECT
+      //   invoices.id,
+      //   invoices.customer_id,
+      //   invoices.amount,
+      //   invoices.status
+      // FROM invoices
+      // WHERE invoices.id = ${id};
     // `;
 
     // const invoice = data.map((invoice) => ({
@@ -328,26 +330,40 @@ export async function fetchInvoiceById(id: string) {
     //   amount: invoice.amount / 100,
     // }));
 
-    // return invoice[0];
-    return 0;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return null;
+    }
+  
+    const invoice = await Invoice.findOne({ _id: id }).lean();
+    if (!invoice) {
+      return null;
+    }
+    // console.log('invoice', invoice);
+    // console.log('invoice', JSON.parse(JSON.stringify(invoice)));
+    return JSON.parse(JSON.stringify(invoice));
+    //return invoice;
+    // return 0;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoice.');
+    //throw new Error('Failed to fetch invoice.');
+    return null;
   }
 }
 
 export async function fetchCustomers() {
   try {
     // const customers = await sql<CustomerField[]>`
-    //   SELECT
-    //     id,
-    //     name
-    //   FROM customers
-    //   ORDER BY name ASC
+      // SELECT
+      //   id,
+      //   name
+      // FROM customers
+      // ORDER BY name ASC
     // `;
 
-    // return customers;
-    return;
+    const customers = await Customer.find({}, { _id: 0, id: 1, name: 1 }).sort({ name: 1 }).lean();
+    //return customers;
+    return JSON.parse(JSON.stringify(customers));
+
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all customers.');
