@@ -32,11 +32,11 @@ export async function fetchRevenue() {
     // const data = revenue;
     //-------------- DB connection -----------------
 
-    console.log('Fetching revenue data...');
+    // console.log('Fetching revenue data...');
     await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const data = await Revenue.find({});
-    console.log('Data fetch completed after 3 seconds.');
+    //console.log('Data fetch completed after 3 seconds.');
     return data;
 
   } catch (error) {

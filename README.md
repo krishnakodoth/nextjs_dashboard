@@ -59,3 +59,17 @@ npm run dev Or pnpm run dev
     
     This will truncate existing data and insert new random customer and invoice entries.
 
+
+## Using [NextAuth.js](https://nextjs.authjs.dev/) for authentication
+
+```bash
+pnpm i next-auth@beta
+```
+
+```
+# macOS
+openssl rand -base64 32
+# Windows can use https://generate-secret.vercel.app/32
+```
+
+#### Read Authentication [Documentation](https://nextjs.org/learn/dashboard-app/adding-authentication)

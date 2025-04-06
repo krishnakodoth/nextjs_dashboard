@@ -1,6 +1,10 @@
 'use server';
 
 import { z } from 'zod';
+
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
+
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import Invoice from '@/app/models/Invoice';
@@ -30,6 +34,28 @@ export type State = {
     };
     message?: string | null;
 };
+
+
+export async function authenticate(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    try {
+        console.log('FormData:', formData);
+        const resp = await signIn('credentials', formData);
+        console.log('Response:', resp);
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case 'CredentialsSignin':
+                    return 'Invalid credentials.';
+                default:
+                    return 'Something went wrong.';
+            }
+        }
+        throw error;
+    }
+}
 
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 // Use Zod to update the expected types
