@@ -1,118 +1,82 @@
 // import bcrypt from 'bcrypt';
 import bcrypt from 'bcryptjs';
-import postgres from 'postgres';
-import { invoices, customers, revenue, users } from '../lib/placeholder-data';
+import { NextRequest, NextResponse } from 'next/server';
+import dbConnect from '@/app/lib/mongoose';
+import User from '@/app/models/User';
+import Customer from '@/app/models/Customer';
+import Invoice from '@/app/models/Invoice';
+import Revenue from '../models/Revenue';
+import { users,customers,invoices,revenue } from '../lib/placeholder-data';
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+
 
 async function seedUsers() {
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-  await sql`
-    CREATE TABLE IF NOT EXISTS users (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
-    );
-  `;
+  // Clear existing data
+  await User.deleteMany({});
 
-  const insertedUsers = await Promise.all(
+  // Insert seed data
+  const updatedUsers = await Promise.all(
     users.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
-      return sql`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
-        ON CONFLICT (id) DO NOTHING;
-      `;
-    }),
+      return { ...user, password: hashedPassword };
+    })
   );
 
-  return insertedUsers;
-}
+  const usersList = await User.insertMany(updatedUsers);;
 
-async function seedInvoices() {
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
-
-  await sql`
-    CREATE TABLE IF NOT EXISTS invoices (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      customer_id UUID NOT NULL,
-      amount INT NOT NULL,
-      status VARCHAR(255) NOT NULL,
-      date DATE NOT NULL
-    );
-  `;
-
-  const insertedInvoices = await Promise.all(
-    invoices.map(
-      (invoice) => sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date})
-        ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
-  );
-
-  return insertedInvoices;
+  console.log('User collection truncated and seeded successfully.');
+  return usersList;
 }
 
 async function seedCustomers() {
-  await sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+  // Clear existing data
+  await Customer.deleteMany({});
 
-  await sql`
-    CREATE TABLE IF NOT EXISTS customers (
-      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) NOT NULL,
-      image_url VARCHAR(255) NOT NULL
-    );
-  `;
-
-  const insertedCustomers = await Promise.all(
-    customers.map(
-      (customer) => sql`
-        INSERT INTO customers (id, name, email, image_url)
-        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
-        ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
+  // Insert seed data
+  const updatedUsers = await Promise.all(
+    users.map(async (user) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      return { ...user, password: hashedPassword };
+    })
   );
 
+  const insertedCustomers = await Customer.insertMany(customers);
+
+  console.log('Customer collection truncated and seeded successfully.');
   return insertedCustomers;
 }
 
+async function seedInvoices() {
+  // Clear existing data
+  await Invoice.deleteMany({});
+
+  // Insert seed data
+  const insertedInvoices = await Invoice.insertMany(invoices);
+  console.log('Invoice collection truncated and seeded successfully.');
+  return insertedInvoices;
+}
+
+
+
 async function seedRevenue() {
-  await sql`
-    CREATE TABLE IF NOT EXISTS revenue (
-      month VARCHAR(4) NOT NULL UNIQUE,
-      revenue INT NOT NULL
-    );
-  `;
-
-  const insertedRevenue = await Promise.all(
-    revenue.map(
-      (rev) => sql`
-        INSERT INTO revenue (month, revenue)
-        VALUES (${rev.month}, ${rev.revenue})
-        ON CONFLICT (month) DO NOTHING;
-      `,
-    ),
-  );
-
+  // Clear existing data
+  await Revenue.deleteMany({});
+  // Insert seed data
+  const insertedRevenue = await Revenue.insertMany(revenue);
+  console.log('Revenue collection truncated and seeded successfully.');  
   return insertedRevenue;
 }
 
 export async function GET() {
+  await dbConnect();
   try {
-    const result = await sql.begin((sql) => [
-      seedUsers(),
-      seedCustomers(),
-      seedInvoices(),
-      seedRevenue(),
-    ]);
+    await seedUsers();
+    await seedCustomers();
+    await seedInvoices();
+    await seedRevenue();
 
-    return Response.json({ message: 'Database seeded successfully' });
+    return new Response('Seeded successfully', { status: 200 });
   } catch (error) {
-    return Response.json({ error }, { status: 500 });
+    return new Response('Error seeding data', { status: 500 });
   }
 }

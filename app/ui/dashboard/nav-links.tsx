@@ -23,6 +23,7 @@ const links = [
 
 export default function NavLinks() {
   const pathName = usePathname();
+  
   return (
     <>
       {links.map((link) => {
@@ -40,7 +41,7 @@ export default function NavLinks() {
             <p className="hidden md:block">{link.name}</p>
           </Link>
         );
-      })}
+      })}      
     </>
   );
 }

@@ -1,50 +1,86 @@
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
 // https://nextjs.org/learn/dashboard-app/fetching-data
+// const users = [
+//   {
+//     id: '410544b2-4001-4271-9855-fec4b6a6442a',
+//     name: 'User',
+//     email: 'user@nextmail.com',
+//     password: '123456',
+//   },
+// ];
 const users = [
-  {
-    id: '410544b2-4001-4271-9855-fec4b6a6442a',
-    name: 'User',
-    email: 'user@nextmail.com',
-    password: '123456',
-  },
+  { id: 'u1a2c3', name: 'Alice Morgan', email: 'alice.morgan@example.com', password: 'fK7dP2xM' },
+  { id: 'v4b5d6', name: 'Brian Hart', email: 'brian.hart@example.com', password: 'M8rZ2tW9' },
+  { id: 'w7e8g9', name: 'Chloe Diaz', email: 'chloe.diaz@example.com', password: 'aL3pV9qR' },
+  { id: 'x1h2j3', name: 'David Chen', email: 'david.chen@example.com', password: 'sY7uK5mQ' },
+  { id: 'y4k5m6', name: 'Ella Patel', email: 'ella.patel@example.com', password: 'nD4eC2fS' },
+  { id: 'z7n8p9', name: 'Felix Zhang', email: 'felix.zhang@example.com', password: 'rG2tX8vN' },
+  { id: 'a1q2s3', name: 'Grace Lee', email: 'grace.lee@example.com', password: 'jP5nB7wM' },
+  { id: 'b4t5v6', name: 'Henry Kim', email: 'henry.kim@example.com', password: 'kE9mH6aZ' },
+  { id: 'c7w8y9', name: 'Isla Thompson', email: 'isla.thompson@example.com', password: 'zL1fQ4cX' },
+  { id: 'd1z2a3', name: 'Jack Wilson', email: 'jack.wilson@example.com', password: 'tM6rD8yK' },
 ];
 
 const customers = [
   {
-    id: 'd6e15727-9fe1-4961-8c5b-ea44a9bd81aa',
+    id: '1a2b3c4d-1111-aaaa-bbbb-000000000001',
     name: 'Evil Rabbit',
     email: 'evil@rabbit.com',
-    image_url: '/customers/evil-rabbit.png',
+    image_url: 'https://picsum.photos/200?random=1',
   },
   {
-    id: '3958dc9e-712f-4377-85e9-fec4b6a6442a',
-    name: 'Delba de Oliveira',
-    email: 'delba@oliveira.com',
-    image_url: '/customers/delba-de-oliveira.png',
+    id: '1a2b3c4d-2222-aaaa-bbbb-000000000002',
+    name: 'Sunny Fox',
+    email: 'sunny@fox.com',
+    image_url: 'https://picsum.photos/200?random=2',
   },
   {
-    id: '3958dc9e-742f-4377-85e9-fec4b6a6442a',
-    name: 'Lee Robinson',
-    email: 'lee@robinson.com',
-    image_url: '/customers/lee-robinson.png',
+    id: '1a2b3c4d-3333-aaaa-bbbb-000000000003',
+    name: 'Magic Panda',
+    email: 'magic@panda.com',
+    image_url: 'https://picsum.photos/200?random=3',
   },
   {
-    id: '76d65c26-f784-44a2-ac19-586678f7c2f2',
-    name: 'Michael Novotny',
-    email: 'michael@novotny.com',
-    image_url: '/customers/michael-novotny.png',
+    id: '1a2b3c4d-4444-aaaa-bbbb-000000000004',
+    name: 'Ghost Falcon',
+    email: 'ghost@falcon.com',
+    image_url: 'https://picsum.photos/200?random=4',
   },
   {
-    id: 'CC27C14A-0ACF-4F4A-A6C9-D45682C144B9',
-    name: 'Amy Burns',
-    email: 'amy@burns.com',
-    image_url: '/customers/amy-burns.png',
+    id: '1a2b3c4d-5555-aaaa-bbbb-000000000005',
+    name: 'Witty Owl',
+    email: 'witty@owl.com',
+    image_url: 'https://picsum.photos/200?random=5',
   },
   {
-    id: '13D07535-C59E-4157-A011-F8D2EF4E0CBB',
-    name: 'Balazs Orban',
-    email: 'balazs@orban.com',
-    image_url: '/customers/balazs-orban.png',
+    id: '1a2b3c4d-6666-aaaa-bbbb-000000000006',
+    name: 'Brave Tiger',
+    email: 'brave@tiger.com',
+    image_url: 'https://picsum.photos/200?random=6',
+  },
+  {
+    id: '1a2b3c4d-7777-aaaa-bbbb-000000000007',
+    name: 'Happy Koala',
+    email: 'happy@koala.com',
+    image_url: 'https://picsum.photos/200?random=7',
+  },
+  {
+    id: '1a2b3c4d-8888-aaaa-bbbb-000000000008',
+    name: 'Curious Bear',
+    email: 'curious@bear.com',
+    image_url: 'https://picsum.photos/200?random=8',
+  },
+  {
+    id: '1a2b3c4d-9999-aaaa-bbbb-000000000009',
+    name: 'Smart Deer',
+    email: 'smart@deer.com',
+    image_url: 'https://picsum.photos/200?random=9',
+  },
+  {
+    id: '1a2b3c4d-aaaa-aaaa-bbbb-000000000010',
+    name: 'Chill Llama',
+    email: 'chill@llama.com',
+    image_url: 'https://picsum.photos/200?random=10',
   },
 ];
 
