@@ -12,6 +12,7 @@ import { revenue,invoices } from './placeholder-data';
 import Revenue from '../models/Revenue';
 import dbConnect from './mongoose';
 import Invoice from '../models/Invoice';
+import Customer from '../models/Customer';
 
 
 export async function fetchRevenue() {
@@ -29,7 +30,12 @@ export async function fetchRevenue() {
     // console.log('Data fetch completed after 3 seconds.');
     // const data = revenue;
     //-------------- DB connection -----------------
+
+    console.log('Fetching revenue data...');
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     const data = await Revenue.find({});
+    console.log('Data fetch completed after 3 seconds.');
     return data;
 
   } catch (error) {
@@ -125,12 +131,48 @@ export async function fetchCardData() {
     // const totalPaidInvoices = formatCurrency(data[2][0].paid ?? '0');
     // const totalPendingInvoices = formatCurrency(data[2][0].pending ?? '0');
 
-    // return {
-    //   numberOfCustomers,
-    //   numberOfInvoices,
-    //   totalPaidInvoices,
-    //   totalPendingInvoices,
-    // };
+    // Find the number of customers
+    const customerCount = await Customer.countDocuments();
+    const numberOfCustomers = Number(customerCount ?? '0');
+    // Find the number of invoices
+    const invoiceCount = await Invoice.countDocuments();
+    const numberOfInvoices = Number(invoiceCount ?? '0');
+    // Find the total paid invoices
+    const invoiceStatus = await Invoice.aggregate([
+      {
+        $group: {
+          _id: null,
+          paid: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'paid'] }, '$amount', 0],
+            },
+          },
+          pending: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'pending'] }, '$amount', 0],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          paid: 1,
+          pending: 1,
+        },
+      },
+    ]);
+
+    const totalPaidInvoices = formatCurrency(invoiceStatus[0]?.paid ?? '0');
+    const totalPendingInvoices = formatCurrency(invoiceStatus[0]?.pending ?? '0');
+    
+
+    return {
+      numberOfCustomers,
+      numberOfInvoices,
+      totalPaidInvoices,
+      totalPendingInvoices,
+    };
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch card data.');
